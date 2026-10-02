@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Undercover V5</title>
+<style>
+:root {
+  --bg:#0b0d12; --panel:#171a22; --panel2:#20242e; --text:#f7f7fb; --muted:#9da5b5;
+  --accent:#7d5cff; --accent2:#5c40dd; --border:rgba(255,255,255,.09);
+  --safeh:100dvh;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);min-height:100%}
+body{
+  margin:0; min-height:var(--safeh); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:
+   radial-gradient(circle at 15% 4%,rgba(115,83,255,.24),transparent 32%),
+   radial-gradient(circle at 88% 92%,rgba(58,139,253,.12),transparent 30%),
+   var(--bg);
+  padding: max(18px, env(safe-area-inset-top)) 16px max(22px, env(safe-area-inset-bottom));
+}
+button,input{font:inherit}
+button{touch-action:manipulation}
+#app{width:min(560px,100%);margin:0 auto;min-height:calc(var(--safeh) - 40px)}
+.brand{text-align:center;margin:4px 0 18px}
+.brand h1{margin:0;font-size:35px;letter-spacing:-1.2px}
+.brand p{margin:7px 0 0;color:var(--muted);font-size:14px}
+.panel{background:rgba(23,26,34,.97);border:1px solid var(--border);border-radius:26px;padding:23px;box-shadow:0 24px 70px rgba(0,0,0,.38)}
+.screen[hidden]{display:none!important}
+.pill{display:inline-block;padding:7px 11px;border-radius:999px;background:rgba(120,92,255,.16);color:#c9c0ff;text-transform:uppercase;font-size:12px;font-weight:800;letter-spacing:.08em;margin-bottom:17px}
+h2{font-size:27px;line-height:1.1;margin:0 0 10px;letter-spacing:-.5px}
+h3{margin:0 0 8px}
+.muted{color:var(--muted);line-height:1.5;margin:0 0 18px}
+.tiny{font-size:12px;line-height:1.45;color:#7f8796;margin-top:13px;text-align:center}
+.rule{background:var(--panel2);border-radius:15px;padding:14px;color:#bac1cd;font-size:14px;line-height:1.5;margin:15px 0}
+.btn{display:block;width:100%;border:0;border-radius:17px;padding:16px 17px;background:linear-gradient(180deg,var(--accent),var(--accent2));color:white;font-weight:800;font-size:16px;box-shadow:0 10px 27px rgba(111,79,244,.22);cursor:pointer;text-align:center}
+.btn:active{transform:scale(.99)}
+.btn.secondary{margin-top:10px;background:#292d38;box-shadow:none}
+.btn.ghost{margin-top:10px;background:transparent;border:1px solid rgba(255,255,255,.13);box-shadow:none;color:#dde0e8}
+.btn.danger{background:#40252c;color:#ffc4cd;box-shadow:none}
+.segment{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0 22px}
+.segment button{border:1px solid var(--border);border-radius:14px;padding:14px 8px;background:#242833;color:#d9dde6;font-weight:800}
+.segment button.active{background:rgba(125,92,255,.22);border-color:rgba(125,92,255,.6);color:white}
+label{display:block;font-size:13px;font-weight:750;color:#c8ccd5;margin:0 0 7px}
+.name-row{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:10px;margin:10px 0}
+.avatar{height:34px;width:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(125,92,255,.18);color:#d5ceff;font-weight:900;font-size:13px}
+.name-row input{width:100%;background:#232732;color:white;border:1px solid var(--border);border-radius:13px;padding:13px 12px;outline:none}
+.name-row input:focus{border-color:rgba(125,92,255,.7)}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cat-btn{min-height:74px;border:1px solid var(--border);border-radius:16px;padding:13px;background:#232731;color:white;font-size:14px;font-weight:800;text-align:left}
+.cat-btn:last-child:nth-child(odd){grid-column:1/-1}
+.category-meta{font-size:11px;color:#8f97a6;font-weight:650;margin-top:4px}
+.pass-icon{font-size:52px;text-align:center;margin:3px 0 9px}
+.player-name{font-size:32px;font-weight:900;letter-spacing:-.5px;margin:3px 0 8px;text-align:center}
+.privacy{background:var(--panel2);border-radius:14px;padding:12px;color:#cbd0da;font-size:14px;line-height:1.45;margin:18px 0}
+.word-box{min-height:130px;border-radius:20px;border:1px solid rgba(127,94,255,.30);background:linear-gradient(145deg,rgba(127,94,255,.17),rgba(255,255,255,.025));display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;font-size:34px;font-weight:900;line-height:1.08;margin:12px 0 17px}
+.word-box.covered{font-size:17px;font-weight:700;color:#929baa}
+.progress{display:flex;gap:7px;justify-content:center;margin:15px 0 2px}
+.dot{width:9px;height:9px;border-radius:50%;background:#383d4a}
+.dot.on{background:#8a70ff}
+.play-icon{font-size:54px;text-align:center;margin-bottom:7px}
+.score-list{display:grid;gap:10px;margin:14px 0}
+.score-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;background:#20242e;border-radius:15px;padding:11px 11px 11px 14px}
+.score-name{font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.score-controls{display:flex;align-items:center;gap:7px}
+.score-controls button{width:38px;height:38px;border:0;border-radius:11px;background:#303541;color:white;font-size:22px;font-weight:800}
+.score-value{min-width:36px;text-align:center;font-size:19px;font-weight:900}
+.reveal-card{background:#20242e;border-radius:17px;padding:16px;margin:12px 0 17px}
+.reveal-line{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.reveal-line:last-child{border-bottom:0}
+.reveal-line span:first-child{color:#9fa7b7}
+.reveal-line strong{text-align:right}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.topbar button{border:0;background:#252a35;color:#d9dee8;border-radius:12px;padding:9px 11px;font-size:13px;font-weight:800}
+.warning{background:#3a2b18;color:#ffd694;border:1px solid rgba(255,214,148,.18);border-radius:14px;padding:13px;font-size:13px;line-height:1.45;margin-bottom:14px}
+.noscript{max-width:560px;margin:30px auto;background:#171a22;border-radius:20px;padding:20px;color:white;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+@media (max-width:420px) {
+  .cat-grid{grid-template-columns:1fr}
+  .cat-btn:last-child:nth-child(odd){grid-column:auto}
+  .panel{padding:20px}
+}
+</style>
+</head>
+<body>
+<noscript>
+  <div class="noscript"><b>Cette version avancée nécessite JavaScript.</b><br><br>
+  Ouvre-la dans Safari/Chrome ou utilise la version de secours incluse dans le ZIP.
+  </div>
+</noscript>
+
+<div id="app">
+  <div class="brand"><h1>Undercover</h1><p>V5 · randomizer · joueurs · scores</p></div>
+
+  <section class="screen panel" id="setupScreen">
+    <span class="pill">Joueurs</span>
+    <h2>Qui joue ?</h2>
+    <p class="muted">Choisis le nombre de joueurs et ajoute leurs prénoms. Les noms et scores sont conservés sur cet appareil.</p>
+    <label>Nombre de joueurs</label>
+    <div class="segment" id="playerCountButtons"></div>
+    <div id="nameInputs"></div>
+    <button class="btn" id="toCategoriesBtn">Choisir une catégorie</button>
+    <button class="btn ghost" id="resetScoresSetupBtn">Réinitialiser les scores</button>
+  </section>
+
+  <section class="screen panel" id="categoryScreen" hidden>
+    <div class="topbar"><button id="backSetupBtn">← Joueurs</button><button id="showScoresBtn">Scores</button></div>
+    <span class="pill">Catégorie</span>
+    <h2>Choisissez un univers</h2>
+    <p class="muted">Les paires sont tirées au hasard sans répétition jusqu'à épuisement de la catégorie.</p>
+    <div class="cat-grid" id="categoryGrid"></div>
+  </section>
+
+  <section class="screen panel" id="passScreen" hidden>
+    <span class="pill" id="passCategory"></span>
+    <div class="pass-icon">📱</div>
+    <div class="player-name" id="passPlayerName"></div>
+    <p class="muted" style="text-align:center">Passe le téléphone à cette personne. Les autres ne doivent pas regarder.</p>
+    <button class="btn" id="imReadyBtn">Je suis prêt·e</button>
+  </section>
+
+  <section class="screen panel" id="secretScreen" hidden>
+    <span class="pill" id="secretCounter"></span>
+    <div class="player-name" id="secretPlayerName"></div>
+    <div class="privacy">🙈 Ton mot est privé. Si le téléphone se verrouille ou si l'app passe en arrière-plan, il sera automatiquement remasqué.</div>
+    <div class="word-box covered" id="wordBox">Mot masqué</div>
+    <button class="btn" id="toggleWordBtn">Afficher mon mot</button>
+    <button class="btn secondary" id="nextPlayerBtn">Masquer et passer</button>
+    <div class="progress" id="progressDots"></div>
+  </section>
+
+  <section class="screen panel" id="playScreen" hidden>
+    <div class="play-icon">🕵️</div>
+    <span class="pill">La manche commence</span>
+    <h2>Tout le monde a son mot</h2>
+    <p class="muted">Posez le téléphone et donnez vos indices. Quand la manche est terminée, révélez les rôles.</p>
+    <button class="btn" id="revealRolesBtn">Fin de manche · révéler</button>
+    <button class="btn ghost" id="abortRoundBtn">Abandonner la manche</button>
+  </section>
+
+  <section class="screen panel" id="scoreScreen" hidden>
+    <span class="pill">Résultat</span>
+    <h2>Qui marque des points ?</h2>
+    <div class="reveal-card" id="roundReveal"></div>
+    <p class="muted">Attribuez les points manuellement. Les scores restent enregistrés pour les manches suivantes.</p>
+    <div class="score-list" id="scoreList"></div>
+    <button class="btn" id="sameCategoryBtn">Nouvelle manche · même catégorie</button>
+    <button class="btn secondary" id="changeCategoryBtn">Changer de catégorie</button>
+    <button class="btn ghost" id="editPlayersBtn">Modifier les joueurs</button>
+  </section>
+
+  <section class="screen panel" id="scoresOnlyScreen" hidden>
+    <div class="topbar"><button id="scoresBackBtn">← Retour</button><button class="danger" id="resetScoresBtn">Reset</button></div>
+    <span class="pill">Classement</span>
+    <h2>Scores</h2>
+    <div class="score-list" id="scoresOnlyList"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+const DATA = {"rnb":[["Usher","Chris Brown"],["SZA","Summer Walker"],["Brent Faiyaz","Bryson Tiller"],["Frank Ocean","Miguel"],["Jhené Aiko","Kehlani"],["H.E.R.","Jazmine Sullivan"],["Ne-Yo","Trey Songz"],["Giveon","Khalid"],["Alicia Keys","Mary J. Blige"],["Jeremih","Ty Dolla $ign"],["Tinashe","Victoria Monét"],["Coco Jones","Muni Long"],["The Weeknd","PARTYNEXTDOOR"],["D'Angelo","Maxwell"],["Aaliyah","Brandy"],["Ginuwine","Joe"],["Mario","Omarion"],["Ashanti","Keyshia Cole"],["Ciara","Keri Hilson"],["TLC","Destiny's Child"],["Janet Jackson","Toni Braxton"],["Lucky Daye","Leon Thomas"],["Ari Lennox","Snoh Aalegra"],["Ella Mai","Mahalia"],["Jacquees","Eric Bellinger"],["Musiq Soulchild","Anthony Hamilton"],["Tank","Jaheim"],["Destiny Rogers","Kiana Ledé"],["FLO","Chlöe x Halle"],["Ravyn Lenae","Kelela"]],"rapfr":[["PNL","Djadja & Dinaz"],["Ninho","Niska"],["Booba","Rohff"],["SCH","Lacrim"],["Damso","Hamza"],["Orelsan","Nekfeu"],["Gazo","SDM"],["Tiakola","Franglish"],["Jul","Soso Maness"],["Vald","Lorenzo"],["Lomepal","Georgio"],["La Fève","Luther"],["Kaaris","Kalash Criminel"],["Maes","Da Uzi"],["PLK","Zola"],["Gradur","Niro"],["Seth Gueko","Alkpote"],["Youssoupha","Kery James"],["IAM","Suprême NTM"],["Sniper","113"],["Oxmo Puccino","MC Solaar"],["Alpha Wann","Hugo TSR"],["Josman","Laylow"],["Leto","Guy2Bezbar"],["Koba LaD","Zed"],["RK","ISK"],["Favé","Kerchak"],["Ziak","La Mano 1.9"],["Benjamin Epps","Dinos"],["Médine","Rocé"]],"pop":[["Taylor Swift","Olivia Rodrigo"],["Lady Gaga","Katy Perry"],["Ariana Grande","Sabrina Carpenter"],["Britney Spears","Christina Aguilera"],["Justin Bieber","Shawn Mendes"],["Billie Eilish","Lorde"],["Dua Lipa","Ava Max"],["Miley Cyrus","Demi Lovato"],["Harry Styles","Niall Horan"],["Beyoncé","Rihanna"],["Selena Gomez","Camila Cabello"],["Bruno Mars","Justin Timberlake"],["Madonna","Kylie Minogue"],["Ed Sheeran","Sam Smith"],["Adele","Lewis Capaldi"],["Charli XCX","Rina Sawayama"],["Doja Cat","Nicki Minaj"],["The Kid LAROI","Troye Sivan"],["Chappell Roan","Sabrina Carpenter"],["Gracie Abrams","Tate McRae"],["Carly Rae Jepsen","Ellie Goulding"],["P!nk","Kelly Clarkson"],["Gwen Stefani","Fergie"],["Shakira","Jennifer Lopez"],["Sia","Florence Welch"],["Lana Del Rey","Marina"],["Kesha","Miley Cyrus"],["One Direction","5 Seconds of Summer"],["Coldplay","Imagine Dragons"],["Maroon 5","OneRepublic"]],"series":[["Walter White","Jesse Pinkman"],["Saul Goodman","Mike Ehrmantraut"],["Gus Fring","Lalo Salamanca"],["Tony Soprano","Christopher Moltisanti"],["Carmela Soprano","Adriana La Cerva"],["Don Draper","Roger Sterling"],["Peggy Olson","Joan Holloway"],["Dexter Morgan","Debra Morgan"],["Tommy Shelby","Arthur Shelby"],["Ragnar Lothbrok","Lagertha"],["Jon Snow","Robb Stark"],["Tyrion Lannister","Jaime Lannister"],["Daenerys Targaryen","Cersei Lannister"],["Arya Stark","Sansa Stark"],["Frank Underwood","Claire Underwood"],["Carrie Mathison","Saul Berenson"],["Jimmy McGill","Kim Wexler"],["Omar Little","Stringer Bell"],["Jimmy McNulty","Bunk Moreland"],["Avon Barksdale","Marlo Stanfield"],["Michael Scott","Dwight Schrute"],["Jim Halpert","Pam Beesly"],["Ross Geller","Chandler Bing"],["Monica Geller","Rachel Green"],["Ted Mosby","Barney Stinson"],["Sherlock Holmes","John Watson"],["Dr. House","James Wilson"],["Rick Grimes","Daryl Dixon"],["Negan","The Governor"],["Eleven","Max Mayfield"],["Homelander","Butcher"],["Kendall Roy","Roman Roy"],["Logan Roy","Shiv Roy"],["Joe Goldberg","Dexter Morgan"],["Marty Byrde","Wendy Byrde"],["Pablo Escobar","Javier Peña"],["Harvey Specter","Mike Ross"],["Rue Bennett","Jules Vaughn"],["Meredith Grey","Cristina Yang"],["Villanelle","Eve Polastri"]],"publicfr":[["Emmanuel Macron","François Hollande"],["Nicolas Sarkozy","Jacques Chirac"],["Marine Le Pen","Jordan Bardella"],["Jean-Luc Mélenchon","François Ruffin"],["Édouard Philippe","Gabriel Attal"],["Manuel Valls","Bernard Cazeneuve"],["Nagui","Jean-Luc Reichmann"],["Nikos Aliagas","Camille Combal"],["Léa Salamé","Anne-Sophie Lapix"],["Laurent Delahousse","Gilles Bouleau"],["Yann Barthès","Cyril Hanouna"],["Karine Le Marchand","Faustine Bollaert"],["Jean Dujardin","Romain Duris"],["Omar Sy","Tahar Rahim"],["Vincent Cassel","Mathieu Kassovitz"],["Marion Cotillard","Léa Seydoux"],["Adèle Exarchopoulos","Anaïs Demoustier"],["Pierre Niney","François Civil"],["Stromae","Vianney"],["Aya Nakamura","Vitaa"],["Clara Luciani","Juliette Armanet"],["Mylène Farmer","Zazie"],["Patrick Bruel","Florent Pagny"],["Louane","Amel Bent"],["Florence Foresti","Blanche Gardin"],["Gad Elmaleh","Jamel Debbouze"],["Alain Chabat","Dany Boon"],["Jonathan Cohen","Pio Marmaï"],["Kylian Mbappé","Antoine Griezmann"],["Zinédine Zidane","Didier Deschamps"],["Teddy Riner","Clarisse Agbegnenou"],["Tony Parker","Boris Diaw"],["Renaud Lavillenie","Kevin Mayer"],["Julian Alaphilippe","Thibaut Pinot"],["Philippe Etchebest","Cyril Lignac"],["Hélène Darroze","Anne-Sophie Pic"],["Squeezie","Amixem"],["Inoxtag","Michou"],["McFly","Carlito"],["Cyprien","Norman"],["Jean-Paul Rouve","Gilles Lellouche"],["Audrey Fleurot","Camille Cottin"],["Kad Merad","Franck Dubosc"],["Laurent Ruquier","Michel Drucker"],["Thomas Pesquet","Sophie Adenot"],["David Guetta","Martin Solveig"],["Christine and the Queens","Juliette Armanet"],["Bigflo & Oli","Vianney"]],"publicworld":[["Lionel Messi","Cristiano Ronaldo"],["LeBron James","Stephen Curry"],["Roger Federer","Rafael Nadal"],["Serena Williams","Venus Williams"],["Lewis Hamilton","Max Verstappen"],["Leonardo DiCaprio","Brad Pitt"],["Margot Robbie","Emma Stone"],["Dwayne Johnson","Jason Momoa"],["Kim Kardashian","Kylie Jenner"],["Gordon Ramsay","Jamie Oliver"],["MrBeast","PewDiePie"],["Tom Cruise","Keanu Reeves"],["Robert Downey Jr.","Chris Evans"],["Ryan Gosling","Ryan Reynolds"],["Zendaya","Florence Pugh"],["Scarlett Johansson","Jennifer Lawrence"],["Natalie Portman","Anne Hathaway"],["Morgan Freeman","Samuel L. Jackson"],["Will Smith","Jamie Foxx"],["David Beckham","Zlatan Ibrahimović"],["Neymar","Ronaldinho"],["Michael Jordan","Kobe Bryant"],["Novak Djokovic","Andy Murray"],["Tiger Woods","Rory McIlroy"],["Usain Bolt","Carl Lewis"],["Simone Biles","Nadia Comăneci"],["Elon Musk","Mark Zuckerberg"],["Bill Gates","Jeff Bezos"],["Oprah Winfrey","Ellen DeGeneres"],["Jimmy Fallon","Jimmy Kimmel"],["Gigi Hadid","Bella Hadid"],["Naomi Campbell","Cindy Crawford"],["Gordon Ramsay","Anthony Bourdain"],["Arnold Schwarzenegger","Sylvester Stallone"],["Jackie Chan","Jet Li"],["Adele","Céline Dion"],["Shakira","Jennifer Lopez"],["Bad Bunny","J Balvin"],["Drake","Kendrick Lamar"],["Eminem","50 Cent"]],"ville":[["Paris","Lyon"],["Marseille","Nice"],["Bordeaux","Nantes"],["Lille","Strasbourg"],["Toulouse","Montpellier"],["Tours","Orléans"],["Rennes","Nantes"],["Rouen","Caen"],["Grenoble","Annecy"],["Avignon","Nîmes"],["Londres","Dublin"],["Madrid","Barcelone"],["Lisbonne","Porto"],["Rome","Milan"],["Berlin","Munich"],["Amsterdam","Bruxelles"],["Copenhague","Stockholm"],["Oslo","Helsinki"],["Prague","Budapest"],["Vienne","Zurich"],["Athènes","Istanbul"],["Tirana","Durrës"],["Belgrade","Sarajevo"],["Zagreb","Ljubljana"],["Sofia","Bucarest"],["New York","Chicago"],["Los Angeles","San Francisco"],["Miami","Orlando"],["Boston","Philadelphie"],["Seattle","Portland"],["Toronto","Montréal"],["Vancouver","Seattle"],["Mexico","Guadalajara"],["Tokyo","Séoul"],["Osaka","Kyoto"],["Bangkok","Hanoï"],["Singapour","Hong Kong"],["Dubaï","Doha"],["Abu Dhabi","Dubaï"],["Sydney","Melbourne"],["Le Caire","Marrakech"],["Casablanca","Rabat"],["Dakar","Abidjan"],["Buenos Aires","Montevideo"],["Lima","Bogotá"],["Rio de Janeiro","São Paulo"],["Santiago","Buenos Aires"],["Le Cap","Johannesburg"],["Auckland","Wellington"],["Delhi","Mumbai"]],"objet":[["Fourchette","Cuillère"],["Verre","Tasse"],["Assiette","Bol"],["Couteau","Ciseaux"],["Canapé","Fauteuil"],["Oreiller","Coussin"],["Chaise","Tabouret"],["Table","Bureau"],["Téléphone","Tablette"],["Ordinateur portable","Tablette"],["Casque audio","Écouteurs"],["Télécommande","Manette"],["Montre","Réveil"],["Lampe","Bougie"],["Valise","Sac à dos"],["Portefeuille","Porte-cartes"],["Stylo","Crayon"],["Marqueur","Surligneur"],["Brosse à dents","Rasoir"],["Peigne","Brosse à cheveux"],["Marteau","Tournevis"],["Clé","Cadenas"],["Parapluie","Imperméable"],["Bouteille","Gourde"],["Poêle","Casserole"],["Four","Micro-ondes"],["Aspirateur","Balai"],["Machine à laver","Lave-vaisselle"],["Frigo","Congélateur"],["Grille-pain","Bouilloire"],["Sèche-cheveux","Lisseur"],["Clavier","Souris"],["Écran","Télévision"],["Appareil photo","Caméscope"],["Chargeur","Batterie externe"],["Livre","Magazine"],["Journal","Carnet"],["Trombone","Agrafeuse"],["Ruban adhésif","Colle"],["Sac à main","Pochette"],["Casquette","Bonnet"],["Écharpe","Foulard"],["Basket","Chaussure de ville"],["Ceinture","Bretelles"],["Miroir","Cadre photo"],["Rideau","Store"],["Savon","Gel douche"],["Shampoing","Après-shampoing"],["Tire-bouchon","Décapsuleur"],["Pelle","Râteau"],["Pince","Clé anglaise"],["Thermomètre","Balance"],["Ventilateur","Climatiseur"],["Poubelle","Panier à linge"],["Cintre","Porte-manteau"],["Carte bancaire","Pièce de monnaie"],["Éponge","Chiffon"],["Briquet","Allumettes"],["Tente","Sac de couchage"],["Skateboard","Trottinette"]],"metier":[["Médecin","Infirmier"],["Dentiste","Orthodontiste"],["Psychologue","Psychiatre"],["Avocat","Juge"],["Notaire","Avocat"],["Architecte","Ingénieur civil"],["Boulanger","Pâtissier"],["Cuisinier","Chef cuisinier"],["Serveur","Barman"],["Plombier","Électricien"],["Menuisier","Charpentier"],["Maçon","Peintre en bâtiment"],["Policier","Gendarme"],["Pompier","Ambulancier"],["Professeur","Instituteur"],["Journaliste","Présentateur TV"],["Photographe","Vidéaste"],["Graphiste","Illustrateur"],["Développeur","Ingénieur logiciel"],["Comptable","Auditeur"],["Banquier","Conseiller financier"],["Pilote de ligne","Contrôleur aérien"],["Chauffeur de taxi","Chauffeur VTC"],["Mécanicien","Carrossier"],["Coiffeur","Barbier"],["Kinésithérapeute","Ostéopathe"],["Pharmacien","Préparateur en pharmacie"],["Vétérinaire","Soigneur animalier"],["Boucher","Poissonnier"],["Agriculteur","Viticulteur"],["Jardinier","Paysagiste"],["Agent immobilier","Architecte d'intérieur"],["Décorateur","Designer d'intérieur"],["Traducteur","Interprète"],["Éditeur","Correcteur"],["Bibliothécaire","Libraire"],["Réalisateur","Scénariste"],["Acteur","Comédien de théâtre"],["Producteur","Réalisateur"],["DJ","Ingénieur du son"],["Chanteur","Musicien"],["Coach sportif","Professeur de fitness"],["Footballeur","Entraîneur"],["Arbitre","Entraîneur"],["Chercheur","Professeur d'université"],["Biologiste","Chimiste"],["Data analyst","Data scientist"],["Webdesigner","UX designer"],["Responsable RH","Recruteur"],["Commercial","Account manager"]],"expressions":[["Coûter un bras","Coûter les yeux de la tête"],["Être aux anges","Être sur un petit nuage"],["Garder son sang-froid","Garder la tête froide"],["Avoir un poil dans la main","Être un tire-au-flanc"],["Donner sa langue au chat","Jeter l'éponge"],["Mettre les pieds dans le plat","Faire une gaffe"],["Être dans la lune","Avoir la tête ailleurs"],["Tourner autour du pot","Ne pas aller droit au but"],["Avoir le cœur sur la main","Être généreux comme pas deux"],["Se serrer la ceinture","Faire des économies"],["Prendre ses jambes à son cou","Filer à l'anglaise"],["Être au bout du rouleau","Être sur les rotules"],["En faire tout un fromage","En faire des tonnes"],["Poser un lapin","Faire faux bond"],["Mettre la main à la pâte","Mettre la main au cambouis"],["Avoir la pêche","Être en pleine forme"],["Tomber dans les pommes","Perdre connaissance"],["Avoir un coup de foudre","Tomber amoureux au premier regard"],["Raconter des salades","Raconter des bobards"],["Avoir le cafard","Avoir le moral dans les chaussettes"],["Se creuser la tête","Se casser la tête"],["Mettre de l'eau dans son vin","Faire des concessions"],["Avoir plus d'un tour dans son sac","Avoir de la ressource"],["Être comme chien et chat","Ne pas pouvoir se voir en peinture"],["Faire d'une pierre deux coups","Faire coup double"],["Chercher midi à quatorze heures","Se compliquer la vie"],["Être tiré à quatre épingles","Être sur son trente-et-un"],["Prendre le taureau par les cornes","Prendre les choses en main"],["Couper l'herbe sous le pied","Prendre de vitesse"],["Mettre la charrue avant les bœufs","Aller plus vite que la musique"],["Être rouge comme une tomate","Rougir jusqu'aux oreilles"],["Dormir comme une marmotte","Dormir comme un loir"],["Pleuvoir des cordes","Pleuvoir à seaux"],["Faire la sourde oreille","Faire semblant de ne pas entendre"],["Jeter de l'huile sur le feu","Mettre de l'huile sur le feu"],["Avoir un chat dans la gorge","Avoir la voix enrouée"],["Être dans de beaux draps","Être dans le pétrin"],["Mettre les bouchées doubles","Passer la vitesse supérieure"],["Être à côté de la plaque","Être complètement à côté"],["Avoir les yeux plus gros que le ventre","Voir trop grand"],["Péter les plombs","Sortir de ses gonds"],["Être au pied du mur","Ne plus avoir le choix"],["Prendre la mouche","Se vexer pour un rien"],["Faire chou blanc","Revenir bredouille"],["Ne pas mâcher ses mots","Dire ses quatre vérités"],["Être une poule mouillée","Avoir la trouille"],["Avoir la tête dans le guidon","Être débordé"],["Mettre les voiles","Prendre le large"],["Noyer le poisson","Embrouiller les pistes"],["Avoir bon dos","Servir de bouc émissaire"]]};
+const LABELS = {"rnb":"🎵 R&B américain","rapfr":"🎤 Rap français / francophone","pop":"✨ Pop internationale","series":"📺 Personnages de séries","publicfr":"🇫🇷 Personnalités françaises","publicworld":"🌍 Personnalités internationales","ville":"🏙️ Ville","objet":"🧩 Objet","metier":"💼 Métier","expressions":"🗣️ Expressions françaises","all":"🎲 Tout mélanger"};
+const PROFILE_KEY = "undercover_v5_profile";
+const USED_PREFIX = "undercover_v5_used_";
+
+const $ = (id) => document.getElementById(id);
+const screens = {
+  setup: $("setupScreen"),
+  category: $("categoryScreen"),
+  pass: $("passScreen"),
+  secret: $("secretScreen"),
+  play: $("playScreen"),
+  score: $("scoreScreen"),
+  scoresOnly: $("scoresOnlyScreen")
+};
+
+let profile = loadProfile();
+let state = {
+  screen: "setup",
+  category: null,
+  current: 0,
+  round: null,
+  wordVisible: false,
+  scoresReturn: "category"
+};
+
+function loadProfile() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PROFILE_KEY) || "null");
+    if (saved && [3,4,5].includes(saved.count) && Array.isArray(saved.names) && Array.isArray(saved.scores)) {
+      return normalizeProfile(saved.count, saved.names, saved.scores);
+    }
+  } catch(e) {}
+  return normalizeProfile(3, [], []);
+}
+
+function normalizeProfile(count, names, scores) {
+  const n = Number(count) || 3;
+  return {
+    count: n,
+    names: Array.from({length:n}, (_,i) => (names[i] || `Joueur ${i+1}`).trim() || `Joueur ${i+1}`),
+    scores: Array.from({length:n}, (_,i) => Number.isFinite(Number(scores[i])) ? Number(scores[i]) : 0)
+  };
+}
+
+function saveProfile() {
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+}
+
+function setPlayerCount(n) {
+  const old = profile;
+  profile = normalizeProfile(n, old.names, old.scores);
+  saveProfile();
+  renderSetup();
+}
+
+function commitNames() {
+  const inputs = [...$("nameInputs").querySelectorAll("input")];
+  profile.names = inputs.map((el,i) => el.value.trim() || `Joueur ${i+1}`);
+  saveProfile();
+}
+
+function showScreen(name) {
+  state.screen = name;
+  Object.entries(screens).forEach(([key,el]) => el.hidden = key !== name);
+  window.scrollTo(0,0);
+  updateViewportHeight();
+}
+
+function renderSetup() {
+  $("playerCountButtons").innerHTML = [3,4,5].map(n =>
+    `<button type="button" data-count="${n}" class="${profile.count===n?"active":""}">${n} joueurs</button>`
+  ).join("");
+  $("playerCountButtons").querySelectorAll("button").forEach(btn =>
+    btn.addEventListener("click", () => setPlayerCount(Number(btn.dataset.count)))
+  );
+  $("nameInputs").innerHTML = profile.names.map((name,i) => `
+    <div class="name-row">
+      <div class="avatar">${i+1}</div>
+      <input type="text" maxlength="24" autocomplete="off" value="${escapeHtml(name)}" aria-label="Nom du joueur ${i+1}">
+    </div>`).join("");
+}
+
+function renderCategories() {
+  const cats = [...Object.keys(DATA), "all"];
+  $("categoryGrid").innerHTML = cats.map(cat => {
+    const count = cat === "all" ? Object.values(DATA).reduce((a,v)=>a+v.length,0) : DATA[cat].length;
+    return `<button class="cat-btn" type="button" data-cat="${cat}">
+      <div>${LABELS[cat]}</div><div class="category-meta">${count} paires</div>
+    </button>`;
+  }).join("");
+  $("categoryGrid").querySelectorAll(".cat-btn").forEach(btn =>
+    btn.addEventListener("click", () => startRound(btn.dataset.cat))
+  );
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"})[c]);
+}
+
+function randomInt(max) {
+  if (max <= 1) return 0;
+  if (window.crypto && crypto.getRandomValues) {
+    const range = 0x100000000;
+    const limit = range - (range % max);
+    const arr = new Uint32Array(1);
+    do { crypto.getRandomValues(arr); } while (arr[0] >= limit);
+    return arr[0] % max;
+  }
+  return Math.floor(Math.random() * max);
+}
+
+function buildPool(category) {
+  if (category !== "all") return DATA[category].map((pair,index)=>({id:`${category}:${index}`,category,pair}));
+  const pool = [];
+  Object.entries(DATA).forEach(([cat,pairs]) => pairs.forEach((pair,index) =>
+    pool.push({id:`${cat}:${index}`,category:cat,pair})
+  ));
+  return pool;
+}
+
+function pickPair(category) {
+  const pool = buildPool(category);
+  const key = USED_PREFIX + category;
+  let used = [];
+  try { used = JSON.parse(localStorage.getItem(key) || "[]"); } catch(e) {}
+  if (!Array.isArray(used)) used = [];
+  const usedSet = new Set(used);
+  let available = pool.filter(x => !usedSet.has(x.id));
+  if (!available.length) {
+    used = [];
+    available = pool.slice();
+  }
+  const chosen = available[randomInt(available.length)];
+  used.push(chosen.id);
+  localStorage.setItem(key, JSON.stringify(used));
+  return chosen;
+}
+
+function startRound(category) {
+  commitNames();
+  state.category = category;
+  const chosen = pickPair(category);
+  const commonSide = randomInt(2);
+  const commonWord = chosen.pair[commonSide];
+  const undercoverWord = chosen.pair[1-commonSide];
+  const undercoverIndex = randomInt(profile.count);
+  const assignments = Array.from({length:profile.count}, (_,i) => i===undercoverIndex ? undercoverWord : commonWord);
+  state.round = {
+    sourceCategory: chosen.category,
+    pair: chosen.pair,
+    commonWord,
+    undercoverWord,
+    undercoverIndex,
+    assignments
+  };
+  state.current = 0;
+  state.wordVisible = false;
+  renderPass();
+}
+
+function renderPass() {
+  hideWord();
+  $("passCategory").textContent = LABELS[state.category] || LABELS[state.round?.sourceCategory] || "Undercover";
+  $("passPlayerName").textContent = profile.names[state.current];
+  showScreen("pass");
+}
+
+function renderSecret() {
+  hideWord();
+  $("secretCounter").textContent = `Joueur ${state.current+1} sur ${profile.count}`;
+  $("secretPlayerName").textContent = profile.names[state.current];
+  $("progressDots").innerHTML = Array.from({length:profile.count},(_,i)=>
+    `<span class="dot ${i===state.current?"on":""}"></span>`
+  ).join("");
+  $("nextPlayerBtn").textContent = state.current === profile.count-1 ? "Masquer et commencer la manche" : "Masquer et passer";
+  showScreen("secret");
+}
+
+function showWord() {
+  state.wordVisible = true;
+  $("wordBox").textContent = state.round.assignments[state.current];
+  $("wordBox").className = "word-box";
+  $("toggleWordBtn").textContent = "Masquer mon mot";
+}
+
+function hideWord() {
+  state.wordVisible = false;
+  $("wordBox").textContent = "Mot masqué";
+  $("wordBox").className = "word-box covered";
+  $("toggleWordBtn").textContent = "Afficher mon mot";
+}
+
+function toggleWord() {
+  state.wordVisible ? hideWord() : showWord();
+}
+
+function nextPlayer() {
+  hideWord();
+  if (state.current < profile.count-1) {
+    state.current++;
+    renderPass();
+  } else {
+    showScreen("play");
+  }
+}
+
+function revealRoles() {
+  const r = state.round;
+  $("roundReveal").innerHTML = `
+    <div class="reveal-line"><span>Mot commun</span><strong>${escapeHtml(r.commonWord)}</strong></div>
+    <div class="reveal-line"><span>Undercover</span><strong>${escapeHtml(profile.names[r.undercoverIndex])}</strong></div>
+    <div class="reveal-line"><span>Son mot</span><strong>${escapeHtml(r.undercoverWord)}</strong></div>
+  `;
+  renderScoreList($("scoreList"), true);
+  showScreen("score");
+}
+
+function renderScoreList(container, editable) {
+  container.innerHTML = profile.names.map((name,i) => `
+    <div class="score-row">
+      <div class="score-name">${escapeHtml(name)}</div>
+      <div class="score-controls">
+        ${editable ? `<button type="button" data-score="${i}" data-delta="-1" aria-label="Retirer un point">−</button>` : ""}
+        <div class="score-value" id="${container.id}-score-${i}">${profile.scores[i]}</div>
+        ${editable ? `<button type="button" data-score="${i}" data-delta="1" aria-label="Ajouter un point">+</button>` : ""}
+      </div>
+    </div>`).join("");
+  if (editable) {
+    container.querySelectorAll("button[data-score]").forEach(btn => btn.addEventListener("click", () => {
+      adjustScore(Number(btn.dataset.score), Number(btn.dataset.delta));
+    }));
+  }
+}
+
+function adjustScore(i, delta) {
+  profile.scores[i] += delta;
+  saveProfile();
+  const a = $(`scoreList-score-${i}`);
+  const b = $(`scoresOnlyList-score-${i}`);
+  if (a) a.textContent = profile.scores[i];
+  if (b) b.textContent = profile.scores[i];
+}
+
+function resetScores() {
+  if (!confirm("Réinitialiser tous les scores à 0 ?")) return;
+  profile.scores = profile.scores.map(()=>0);
+  saveProfile();
+  if (state.screen === "score") renderScoreList($("scoreList"), true);
+  if (state.screen === "scoresOnly") renderScoreList($("scoresOnlyList"), false);
+}
+
+function showScores(returnTo) {
+  state.scoresReturn = returnTo;
+  renderScoreList($("scoresOnlyList"), false);
+  showScreen("scoresOnly");
+}
+
+function updateViewportHeight() {
+  document.documentElement.style.setProperty("--safeh", `${window.innerHeight}px`);
+}
+
+function resumeFromIOS() {
+  updateViewportHeight();
+  // Ne jamais laisser un mot visible après verrouillage / changement d'app.
+  if (state.screen === "secret") {
+    hideWord();
+    renderPass();
+  }
+  // Force un repaint sans recourir à position:fixed ou :target.
+  const app = $("app");
+  app.style.transform = "translateZ(0)";
+  void app.offsetHeight;
+  requestAnimationFrame(() => {
+    app.style.transform = "";
+    window.scrollTo(0,0);
+  });
+}
+
+$("toCategoriesBtn").addEventListener("click", () => {
+  commitNames();
+  renderCategories();
+  showScreen("category");
+});
+$("backSetupBtn").addEventListener("click", () => showScreen("setup"));
+$("showScoresBtn").addEventListener("click", () => showScores("category"));
+$("imReadyBtn").addEventListener("click", renderSecret);
+$("toggleWordBtn").addEventListener("click", toggleWord);
+$("nextPlayerBtn").addEventListener("click", nextPlayer);
+$("revealRolesBtn").addEventListener("click", revealRoles);
+$("abortRoundBtn").addEventListener("click", () => {
+  if (confirm("Abandonner cette manche ? Aucun score ne sera modifié.")) {
+    renderCategories(); showScreen("category");
+  }
+});
+$("sameCategoryBtn").addEventListener("click", () => startRound(state.category));
+$("changeCategoryBtn").addEventListener("click", () => { renderCategories(); showScreen("category"); });
+$("editPlayersBtn").addEventListener("click", () => { renderSetup(); showScreen("setup"); });
+$("resetScoresBtn").addEventListener("click", resetScores);
+$("resetScoresSetupBtn").addEventListener("click", resetScores);
+$("scoresBackBtn").addEventListener("click", () => showScreen(state.scoresReturn || "category"));
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    hideWord();
+  } else {
+    setTimeout(resumeFromIOS, 40);
+  }
+});
+window.addEventListener("pageshow", resumeFromIOS);
+window.addEventListener("focus", () => setTimeout(resumeFromIOS, 40));
+window.addEventListener("resize", updateViewportHeight);
+window.addEventListener("orientationchange", () => setTimeout(resumeFromIOS, 120));
+
+renderSetup();
+renderCategories();
+updateViewportHeight();
+showScreen("setup");
+})();
+</script>
+</body>
+</html>
